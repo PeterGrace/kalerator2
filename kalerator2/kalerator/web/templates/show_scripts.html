@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<table>
+    <tr>
+        <th></th>
+        <th>
+            Schematic<br>
+            (<a href="/download/schematic/{{storage_type}}/{{layout_id}}">download</a>)
+        </th>
+        <th>
+            Board<br>
+            (<a href="/download/board/{{storage_type}}/{{layout_id}}{{'?eagle_version=free' if eagle_version == 'free'}}">download</a>)
+        </th>
+    </tr>
+    <tr>
+        <th>Preamble</th>
+        <td><pre>{{keyboard.schematic_preamble}}</pre></td>
+        <td><pre>{{keyboard.board_preamble}}</pre></td>
+    </tr>
+    {% for row in keyboard.rows %}
+        {% for key in row %}
+            <tr>
+                <th>{{key.name}}</th>
+                <td><pre>{{key.schematic_scr}}</pre></td>
+                <td><pre>{{key.board_scr}}</pre></td>
+            </tr>
+        {% endfor %}
+    {% endfor %}
+    <tr>
+        <th>Column Connections</th>
+        <td><pre>{{keyboard.column_schematic_scr}}</pre></td>
+        <td><pre>{{keyboard.column_board_scr}}</pre></td>
+    </tr>
+    <tr>
+        <th>Footer</th>
+        <td><pre>{{keyboard.schematic_footer}}</pre></td>
+        <td><pre>{{keyboard.board_footer}}</pre></td>
+    </tr>
+</table>
+
+{% endblock %}
