@@ -5,7 +5,6 @@ from werkzeug.serving import run_with_reloader
 from kalerator.web.app import app
 
 
-@run_with_reloader
 def run_server():
     app.debug = True
     ws = WSGIServer(listener=('0.0.0.0', 5000), application=app)

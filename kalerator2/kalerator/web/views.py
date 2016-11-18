@@ -6,6 +6,9 @@ from kalerator2.kalerator import config
 from kalerator2.kalerator.keyboard import Keyboard
 from .app import app
 from werkzeug.utils import redirect
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 
 @app.route('/', methods=['GET'])
@@ -26,10 +29,13 @@ def post_index():
     url = urlparse(request.form.get('kle_url'))
 
     try:
+        logging.debug("url = {url}".format(url=url))
         storage_type, layout_id = url.fragment.split('/')[1:3]
 
     except IndexError:
         abort(400)  # They gave us an invalid URL
+
+        
 
     return redirect(url_for('view_storage_type_layout_id',
                     storage_type=storage_type, layout_id=layout_id) +

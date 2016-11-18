@@ -2,6 +2,8 @@ from setuptools import setup, find_packages
 
 setup(
     name='kalerator2',
+    author='pgrace',
+    author_email='pete@stackoverflow.com',
     version='0.1',
     packages=find_packages(),
     include_package_data=True,
