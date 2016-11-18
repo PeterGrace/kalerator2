@@ -69,6 +69,10 @@ def fetch_kle_json(storage_type, layout_id):
             keyboard_text = keyboard['files'][file]['content']
             keyboard_json = json.loads(keyboard_text)
             break  # First file wins, hope there's only one...
+
+    elif storage_type == 'local':
+        return json.load(copen(cache_dir + '/' + layout_id, encoding='UTF-8'))
+
     else:
         logging.error('Unknown storage_type: %s', storage_type)
 
