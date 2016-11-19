@@ -7,8 +7,8 @@ from kalerator.web.app import app
 
 def run_server():
     app.debug = True
-    ws = WSGIServer(listener=('0.0.0.0', 5000), application=app)
-    print(' * Listening on http://0.0.0.0:5000/')
+    ws = WSGIServer(listener=('0.0.0.0', 6543), application=app)
+    print(' * Listening on http://0.0.0.0:6543/')
     ws.serve_forever()
 
 

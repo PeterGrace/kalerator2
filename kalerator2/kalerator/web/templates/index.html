@@ -4,6 +4,22 @@
     <h1>Kalerator</h1>
     <h3>Helping you turn Keyboard-Layout-Editor.com layouts into PCB's by generating EAGLE scripts.</h3>
 
+
+    <form method="post">
+        <select name="jsonfile" id="jsonfile" />
+{% for file in jsonfiles %}
+<option value="{{ file|e }}">{{ file|e }}</option>
+{% endfor %}
+        </select>
+
+        <p>EAGLE Version:
+            <input type="radio" name="eagle_version" value="paid" checked>Paid
+            <input type="radio" name="eagle_version" value="free">Free
+        </p>
+        <input type="submit"></p>
+    </form>
+
+<!--
     <h4>Enter a Keyboard-Layout-Editor URL:</h4>
     <form method="post">
         <p><input name="kle_url" type="url" placeholder="http://www.keyboard-layout-editor.com/#/layouts/..." size="80"> <input type="submit"></p>
@@ -12,4 +28,5 @@
             <input type="radio" name="eagle_version" value="free">Free
         </p>
     </form>
+-->
 {% endblock %}
