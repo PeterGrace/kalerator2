@@ -6,8 +6,12 @@ import sys
 from kalerator.keyboard import Keyboard
 
 def write_file(filename, data):
+    print('Writing "{0}"'.format(filename))
     with open(filename, 'wb') as f:
-        f.write(data)
+        try:
+            f.write(data)
+        except TypeError:
+            f.write(data.encode('utf-8'))
 
 def main(filename, flag_free=False, flag_paid=False):
     with open(filename) as file:
@@ -16,24 +20,24 @@ def main(filename, flag_free=False, flag_paid=False):
     (root, ext) = os.path.splitext(filename)
    
     if flag_free:
-        free_board_fn = '{0}{1}.{2}'.format(root, '-board-free', '.scr')
-        free_schm_fn = '{0}{1}.{2}'.format(root, '-schm-free', '.scr')
+        free_board_fn = ''.join([root, '-board-free', '.scr'])
+        free_schm_fn = ''.join([root, '-schm-free', '.scr'])
         k_free = Keyboard(filename, flag_free)
-        write_file(free_board_fn, k_free.board_scr())
-        write_file(free_schm_fn, k_free.schematic_scr())
+        write_file(free_board_fn, k_free.board_scr)
+        write_file(free_schm_fn, k_free.schematic_scr)
 
     if flag_paid:
-        paid_board_fn = '{0}{1}.{2}'.format(root, '-board-paid', '.scr')
-        paid_schm_fn = '{0}{1}.{2}'.format(root, '-schm-paid', '.scr')
+        paid_board_fn = ''.join([root, '-board-paid', '.scr'])
+        paid_schm_fn = ''.join([root, '-schm-paid', '.scr'])
         k_paid = Keyboard(filename, flag_paid)
-        write_file(paid_board_fn, k_paid.board_scr())
-        write_file(paid_schm_fn, k_paid.schematic_scr())
+        write_file(paid_board_fn, k_paid.board_scr)
+        write_file(paid_schm_fn, k_paid.schematic_scr)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('filename')
-    parser.add_argument('free', action='store_true', default=False)
-    parser.add_argument('paid', action='store_true', default=False)
+    parser.add_argument('--free', action='store_true', default=False)
+    parser.add_argument('--paid', action='store_true', default=False)
     args = parser.parse_args()
 
     if not args.filename:
@@ -45,3 +49,4 @@ if __name__ == '__main__':
         sys.exit(1)
 
     sys.exit(main(args.filename, args.free, args.paid))
+
