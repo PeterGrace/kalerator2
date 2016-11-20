@@ -337,6 +337,9 @@ class Keyboard(dict):
                         elif attribute in ['y', 'w', 'h', 'l', 'n']:
                             next_key[attribute] = value
 
+                        elif attribute in ['c', 't', 'a', 'f', 'p']:
+                            # these are color-related codes from kle, ignore them, they're not needed for this.
+                            pass
                         else:
                             logging.debug('Unknown next_key attribute: '
                                           '%s (Value: %s)', attribute, value)
