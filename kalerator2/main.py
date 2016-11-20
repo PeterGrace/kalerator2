@@ -2,8 +2,12 @@ import os
 import click
 import logging
 import json
+import six
 
-from kalerator.keyboard import Keyboard
+if six.PY3:
+    from kalerator2.kalerator.keyboard import Keyboard
+elif six.PY2:
+    from kalerator.keyboard import Keyboard
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -22,7 +26,7 @@ def write_file(filename, data):
 @click.option('--free/--paid', default=False, help="Generate EAGLE files for free edition or paid edition")
 def main(filename, free):
     with open(filename) as file:
-        data=json.load(file)
+        data = json.load(file)
 
     (root, ext) = os.path.splitext(filename)
 

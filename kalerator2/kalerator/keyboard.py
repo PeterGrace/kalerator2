@@ -4,7 +4,46 @@ import logging
 from .config import diode, switches
 from .functions import float_to_str, translate_board_coords
 from .keyboard_key import KeyboardKey
+import six
 
+if six.PY3:
+    from html.parser import HTMLParser
+
+    class MLStripper(HTMLParser):
+
+        def __init__(self):
+            super().__init__()
+            self.reset()
+            self.strict = False
+            self.convert_charrefs = True
+            self.fed = []
+
+        def handle_data(self, d):
+            self.fed.append(d)
+
+        def get_data(self):
+            return ''.join(self.fed)
+
+elif six.PY2:
+    from HTMLParser import HTMLParser
+
+    class MLStripper(HTMLParser):
+
+        def __init__(self):
+            self.reset()
+            self.fed = []
+
+        def handle_data(self, d):
+            self.fed.append(d)
+
+        def get_data(self):
+            return ''.join(self.fed)
+
+
+def strip_tags(html):
+    s = MLStripper()
+    s.feed(html)
+    return s.get_data()
 
 key_translation = {
     '': 'SPACE',
@@ -42,6 +81,7 @@ key_translation = {
 
 
 class Keyboard(dict):
+
     def __init__(self, rawdata, eagle_version):
         """Representation of a keyboard.
 
@@ -117,7 +157,7 @@ class Keyboard(dict):
     def translate_label(self, label):
         """Returns the EAGLE friendly label for this key.
         """
-        key_name = label.split('\n', 1)[0].upper()
+        key_name = strip_tags(label.split('\n', 1)[0].upper())
 
         if key_name in key_translation:
             key_name = key_translation[key_name]
