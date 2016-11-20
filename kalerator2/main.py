@@ -1,9 +1,12 @@
-import argparse
-import json
 import os
-import sys
+import click
+import logging
+import json
 
 from kalerator.keyboard import Keyboard
+
+logging.basicConfig(level=logging.DEBUG)
+
 
 def write_file(filename, data):
     print('Writing "{0}"'.format(filename))
@@ -13,40 +16,27 @@ def write_file(filename, data):
         except TypeError:
             f.write(data.encode('utf-8'))
 
-def main(filename, flag_free=False, flag_paid=False):
+
+@click.command()
+@click.argument('filename')
+@click.option('--free', default=False, help="Generate EAGLE files for free edition")
+def main(filename, free):
     with open(filename) as file:
-        data = json.load(file)
+        data=json.load(file)
 
     (root, ext) = os.path.splitext(filename)
-   
-    if flag_free:
-        free_board_fn = ''.join([root, '-board-free', '.scr'])
-        free_schm_fn = ''.join([root, '-schm-free', '.scr'])
-        k_free = Keyboard(filename, flag_free)
-        write_file(free_board_fn, k_free.board_scr)
-        write_file(free_schm_fn, k_free.schematic_scr)
 
-    if flag_paid:
-        paid_board_fn = ''.join([root, '-board-paid', '.scr'])
-        paid_schm_fn = ''.join([root, '-schm-paid', '.scr'])
-        k_paid = Keyboard(filename, flag_paid)
-        write_file(paid_board_fn, k_paid.board_scr)
-        write_file(paid_schm_fn, k_paid.schematic_scr)
+    if free is True:
+        board_fn = ''.join([root, '-board-free', '.scr'])
+        schm_fn = ''.join([root, '-schm-free', '.scr'])
+        k = Keyboard(data, (free is True))
+    else:
+        board_fn = ''.join([root, '-board-paid', '.scr'])
+        schm_fn = ''.join([root, '-schm-paid', '.scr'])
+        k = Keyboard(data, (free is False))
+
+    write_file(board_fn, k.board_scr)
+    write_file(schm_fn, k.schematic_scr)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('filename')
-    parser.add_argument('--free', action='store_true', default=False)
-    parser.add_argument('--paid', action='store_true', default=False)
-    args = parser.parse_args()
-
-    if not args.filename:
-        print('Require --filename for input json; output files will be (rootname).json -> (rootname)-{board|schm}-{free|paid}.scr')
-        sys.exit(1)
-
-    if not (args.free or args.paid):
-        print('Was given nothing to do, require --free or --paid.')
-        sys.exit(1)
-
-    sys.exit(main(args.filename, args.free, args.paid))
-
+    main()
