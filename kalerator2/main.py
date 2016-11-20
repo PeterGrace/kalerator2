@@ -19,7 +19,7 @@ def write_file(filename, data):
 
 @click.command()
 @click.argument('filename')
-@click.option('--free', default=False, help="Generate EAGLE files for free edition")
+@click.option('--free/--paid', default=False, help="Generate EAGLE files for free edition or paid edition")
 def main(filename, free):
     with open(filename) as file:
         data=json.load(file)
